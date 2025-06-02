@@ -18,6 +18,17 @@ def load_data(db):
 st.title("🎬 Catálogo de Filmes")
 data = load_data(db)
 
+# Sidebar principal
+st.sidebar.title("🎛 Opciones")
+st.sidebar.markdown("Usa las siguientes herramientas para explorar y agregar filmes.")
+
+# Diagnóstico inicial
+if data.empty:
+    st.warning("⚠️ No hay filmes en la base de datos.")
+else:
+    st.write("📊 Datos cargados:")
+    st.dataframe(data.head())
+
 # Justo después de cargar los datos
 st.write("Datos cargados:")
 st.write(data)

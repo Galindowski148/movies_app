@@ -10,9 +10,23 @@ creds = service_account.Credentials.from_service_account_info(key_dict)
 db = firestore.Client(credentials=creds, project="prueba-movies-419b2")
 
 def load_data(db):
-    docs = db.collection('movies').stream()
-    data = [doc.to_dict() for doc in docs]
-    return pd.DataFrame(data)
+    try:
+        docs = db.collection('movies').stream()
+        data = []
+        for doc in docs:
+            record = doc.to_dict()
+            # Filtrar solo las claves esperadas
+            clean_record = {
+                "name": record.get("name"),
+                "company": record.get("company"),
+                "director": record.get("director"),
+                "genre": record.get("genre")
+            }
+            data.append(clean_record)
+        return pd.DataFrame(data)
+    except Exception as e:
+        st.error(f"❌ Error al conectar con Firestore: {e}")
+        return pd.DataFrame()
 
 # Inicio de la app
 st.title("🎬 Catálogo de Filmes")
